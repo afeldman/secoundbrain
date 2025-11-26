@@ -23,6 +23,7 @@ task --list
 This project uses [Task](https://taskfile.dev) for automation. See [TASKS.md](TASKS.md) for detailed usage.
 
 Common commands:
+
 ```bash
 task install              # Install dependencies
 task check                # Run all code quality checks
