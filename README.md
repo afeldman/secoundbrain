@@ -2,10 +2,33 @@
 
 Second Brain CLI around Fabric AI + Obsidian + LM Studio/Ollama
 
-## Installation
+## Quick Start
 
 ```bash
+# Install Task runner (if not installed)
+brew install go-task
+
+# Complete setup
+task setup
+
+# Or install manually
 uv pip install -e .
+
+# Show all available tasks
+task --list
+```
+
+## Task Runner
+
+This project uses [Task](https://taskfile.dev) for automation. See [TASKS.md](TASKS.md) for detailed usage.
+
+Common commands:
+```bash
+task install              # Install dependencies
+task check                # Run all code quality checks
+task fix                  # Auto-fix issues
+task doctor               # Run diagnostics
+task test-ingest          # Test document ingestion
 ```
 
 ## Usage

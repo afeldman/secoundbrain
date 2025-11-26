@@ -1,0 +1,262 @@
+version: "3"
+
+vars:
+  PROJECT_NAME: fabric-second-brain
+  PYTHON_VERSION: "3.11"
+  SRC_DIR: src
+  TEST_DIR: tests
+
+tasks:
+  # Installation & Setup
+  install:
+    desc: Install project dependencies using uv
+    cmds:
+      - uv sync
+      - task: install-dev
+
+  install-dev:
+    desc: Install development dependencies
+    cmds:
+      - uv pip install mypy ruff types-requests
+
+  install-optional:
+    desc: Install optional system dependencies (macOS via brew)
+    cmds:
+      - brew install pandoc
+      - brew install poppler # für pdftotext
+      - brew install ghostscript # für ps2txt
+      - brew install ffmpeg
+
+  install-fabric:
+    desc: Install Fabric AI
+    cmds:
+      - go install github.com/danielmiessler/fabric@latest
+      - fabric --setup
+
+  setup:
+    desc: Complete setup - install all dependencies
+    cmds:
+      - task: install
+      - task: install-optional
+      - task: install-fabric
+      - task: doctor
+
+  # Code Quality
+  lint:
+    desc: Run ruff linter
+    cmds:
+      - uv run ruff check {{.SRC_DIR}}/
+
+  lint-fix:
+    desc: Run ruff linter with auto-fix
+    cmds:
+      - uv run ruff check --fix {{.SRC_DIR}}/
+
+  format:
+    desc: Format code with ruff
+    cmds:
+      - uv run ruff format {{.SRC_DIR}}/
+
+  format-check:
+    desc: Check code formatting without modifying
+    cmds:
+      - uv run ruff format --check {{.SRC_DIR}}/
+
+  typecheck:
+    desc: Run mypy type checking
+    cmds:
+      - uv run mypy {{.SRC_DIR}}/
+
+  check:
+    desc: Run all code quality checks
+    cmds:
+      - task: lint
+      - task: format-check
+      - task: typecheck
+
+  fix:
+    desc: Auto-fix all fixable issues
+    cmds:
+      - task: lint-fix
+      - task: format
+      - task: typecheck
+
+  # Testing
+  test:
+    desc: Run tests (placeholder - add pytest when tests exist)
+    cmds:
+      - echo "No tests configured yet. Add pytest to run tests."
+
+  test-ingest:
+    desc: Test document ingestion with test file
+    cmds:
+      - uv run second-brain ingest test_document.md --title "Test Ingestion" --tags "test,demo"
+
+  # Application Commands
+  run:
+    desc: Run the CLI application
+    cmds:
+      - uv run second-brain {{.CLI_ARGS}}
+
+  init:
+    desc: Initialize Obsidian vault
+    cmds:
+      - uv run second-brain init
+
+  config:
+    desc: Show current configuration
+    cmds:
+      - uv run second-brain config
+
+  doctor:
+    desc: Run system diagnostics
+    cmds:
+      - uv run second-brain doctor
+
+  debug:
+    desc: Show debug information
+    cmds:
+      - uv run second-brain debug
+
+  # Development
+  dev:
+    desc: Start development mode with auto-reload (if applicable)
+    cmds:
+      - echo "Development mode - run 'task run CLI_ARGS=\"<command>\"' to test commands"
+      - task: doctor
+
+  watch:
+    desc: Watch for changes and run checks
+    cmds:
+      - echo "Watching for changes..."
+      - |
+        while true; do
+          inotifywait -r -e modify {{.SRC_DIR}}/ 2>/dev/null || fswatch -o {{.SRC_DIR}}/ -1
+          echo "Changes detected, running checks..."
+          task check || true
+        done
+
+  # Git & Release
+  commit:
+    desc: Run checks before committing
+    cmds:
+      - task: fix
+      - git status
+
+  pre-commit:
+    desc: Pre-commit hook - run all checks
+    cmds:
+      - task: check
+
+  tag:
+    desc: Create a new git tag (use TAG=v0.1.0)
+    cmds:
+      - git tag -a {{.TAG}} -m "Release {{.TAG}}"
+      - git push origin {{.TAG}}
+    requires:
+      vars: [TAG]
+
+  # Cleanup
+  clean:
+    desc: Remove generated files and caches
+    cmds:
+      - find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+      - find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
+      - find . -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
+      - find . -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
+      - find . -type f -name "*.pyc" -delete 2>/dev/null || true
+      - find . -type f -name "*.pyo" -delete 2>/dev/null || true
+
+  clean-logs:
+    desc: Remove log files
+    cmds:
+      - rm -rf logs/*.log 2>/dev/null || true
+
+  clean-all:
+    desc: Remove all generated files including venv
+    cmds:
+      - task: clean
+      - task: clean-logs
+      - rm -rf .venv 2>/dev/null || true
+
+  # Documentation
+  docs:
+    desc: Show project documentation
+    cmds:
+      - cat README.md
+
+  docs-install:
+    desc: Show installation documentation
+    cmds:
+      - cat INSTALL.md
+
+  docs-changelog:
+    desc: Show changelog
+    cmds:
+      - cat CHANGELOG.md
+
+  # Build & Distribution
+  build:
+    desc: Build distribution packages
+    cmds:
+      - uv build
+
+  publish:
+    desc: Publish to PyPI (use --token for auth)
+    cmds:
+      - echo "Publishing to PyPI..."
+      - uv publish
+
+  publish-test:
+    desc: Publish to TestPyPI
+    cmds:
+      - echo "Publishing to TestPyPI..."
+      - uv publish --repository testpypi
+
+  # Vault Management
+  vault-init:
+    desc: Initialize a new Obsidian vault
+    cmds:
+      - uv run second-brain init
+
+  vault-organize:
+    desc: Organize vault with AI
+    cmds:
+      - uv run second-brain organize
+
+  vault-classify:
+    desc: Auto-classify notes in vault
+    cmds:
+      - uv run second-brain classify
+
+  # Utilities
+  version:
+    desc: Show project version
+    cmds:
+      - uv run python -c "from fabric_second_brain import __version__; print(__version__)"
+
+  deps:
+    desc: Show installed dependencies
+    cmds:
+      - uv pip list
+
+  deps-outdated:
+    desc: Check for outdated dependencies
+    cmds:
+      - uv pip list --outdated
+
+  deps-update:
+    desc: Update dependencies
+    cmds:
+      - uv lock --upgrade
+      - uv sync
+
+  tree:
+    desc: Show project structure
+    cmds:
+      - tree -I '__pycache__|*.pyc|.git|.venv|.mypy_cache|.ruff_cache' -L 3
+
+  help:
+    desc: Show available tasks
+    cmds:
+      - task --list
