@@ -20,7 +20,7 @@ from platformdirs import PlatformDirs
 from .banner import print_banner
 from .color import error, info, magenta, success
 from .config import APP_AUTHOR, APP_NAME, SBConfig, load_config, save_config
-from .document_processor import DocumentProcessor, MediaProcessor
+from .processors import DocumentProcessor, MediaProcessor
 
 # --- Helper Functions --------------------------------------------------------
 

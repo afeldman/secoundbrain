@@ -14,6 +14,7 @@ The Second Brain system can now:
 ## Technical Details
 
 The system supports the following document formats:
+
 - PDF documents
 - Microsoft Office (DOC, DOCX, XLS, XLSX, PPT, PPTX)
 - OpenOffice formats (ODT, ODS, ODP)
@@ -21,6 +22,7 @@ The system supports the following document formats:
 - PostScript files (PS, EPS)
 
 For media files:
+
 - Video: MP4, AVI, MOV, MKV, WebM
 - Audio: MP3, WAV, M4A, FLAC, OGG
 - YouTube videos via URL
