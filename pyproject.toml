@@ -27,25 +27,25 @@ dependencies = [
 
 [project.scripts]
 # Haupt-Organisationstools
-organize = "organize:main"
-init-vault = "init_vault:main"
-cleanup-vault = "cleanup_vault:main"
+organize = "fabric_second_brain.organize:main"
+init-vault = "fabric_second_brain.init_vault:main"
+cleanup-vault = "fabric_second_brain.cleanup_vault:main"
 
 # Daily Notes
-create-dailies = "create_dailies:main"
+create-dailies = "fabric_second_brain.create_dailies:main"
 
 # YouTube Workflow
-youtube = "youtube_workflow:main"
+youtube = "fabric_second_brain.youtube_workflow:main"
 
 # Generators
-moc-builder = "generators.moc_builder:main"
-people-extractor = "generators.people_extractor:main"
-project-extractor = "generators.project_extractor:main"
-cluster-map = "generators.cluster_map:main"
+moc-builder = "fabric_second_brain.generators.moc_builder:main"
+people-extractor = "fabric_second_brain.generators.people_extractor:main"
+project-extractor = "fabric_second_brain.generators.project_extractor:main"
+cluster-map = "fabric_second_brain.generators.cluster_map:main"
 
 # Auto-Tools
-auto-yaml-header = "auto_yaml_header:main"
-auto-tags = "auto_tags:main"
+auto-yaml-header = "fabric_second_brain.auto_yaml_header:main"
+auto-tags = "fabric_second_brain.auto_tags:main"
 
 [project.urls]
 Homepage = "https://github.com/afeldman/fabric-second-brain"
@@ -60,7 +60,7 @@ build-backend = "hatchling.build"
 dev = []
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
+packages = ["src/fabric_second_brain"]
 
 [tool.ruff]
 line-length = 100
