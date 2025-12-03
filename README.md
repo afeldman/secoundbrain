@@ -1,34 +1,24 @@
 # Fabric Second Brain
 
-Automatisierte Second Brain Organisation mit Fabric AI + Obsidian + LM Studio/Ollama
+Automatisierte Second Brain Organisation mit Fabric AI + Obsidian
 
 ## Quick Start
 
 ```bash
-# Virtual Environment erstellen und aktivieren
-python3 -m venv .venv
-source .venv/bin/activate
+# Installation mit uv (empfohlen)
+uv sync
 
-# Dependencies installieren
-pip install -r requirements.txt
+# Oder mit Task
+task install
 
 # Umgebungsvariable setzen
-export OBSIDIAN_VAULT="$HOME/Obsidian"
+export OBSIDIAN_VAULT="$HOME/lynq"
 
 # PARA-Struktur im Vault erstellen
-python3 init_vault.py
+uv run init-vault
 
 # Vollständige Vault-Organisation ausführen
 ./bootstrap-secondbrain.sh
-```
-
-**Oder mit dem install.sh Script:**
-
-```bash
-./install.sh              # Erstellt .venv und installiert alles
-source .venv/bin/activate # Aktivieren
-python3 init_vault.py     # Vault-Struktur erstellen
-./bootstrap-secondbrain.sh # Ausführen
 ```
 
 ## Workflow
@@ -46,23 +36,60 @@ Das System führt folgende Schritte automatisch aus:
 9. **MOC-Generierung** - Maps of Content erstellen
 10. **Cluster-Maps** - Semantische Themen-Cluster visualisieren
 
-## Manuelle Verwendung
+## Verfügbare Commands
+
+Alle Scripts sind als CLI-Tools über `uv run` verfügbar:
 
 ```bash
-# Einzelne Aktionen ausführen
-python3 organize.py rename --rules rules/rename.yaml
-python3 organize.py move --rules rules/categorize.yaml
-python3 organize.py tags --rules rules/tags.yaml
+# Vault Management
+uv run init-vault              # PARA-Struktur erstellen
+uv run init-vault --info       # Vault-Analyse
+uv run cleanup-vault --analyze # Alte Ordner analysieren
+
+# Daily Notes
+uv run create-dailies --create --days 7  # Woche erstellen
+uv run create-dailies --link-recent      # Auto-Linking
+
+# YouTube Workflow
+uv run youtube "URL" --ai-summary        # Mit AI-Zusammenfassung
+uv run youtube "URL" --pattern extract_wisdom
+
+# Organisation
+uv run organize rename --rules rules/rename.yml
+uv run organize move --rules rules/categorize.yml
+uv run organize tags --rules rules/tags.yml
 
 # Generatoren
-python3 generators/project_extractor.py
-python3 generators/people_extractor.py
-python3 generators/moc_builder.py
-python3 generators/cluster_map.py
+uv run moc-builder          # Maps of Content
+uv run cluster-map          # Cluster-Visualisierung
+uv run project-extractor    # Projekt-Extraktion
+uv run people-extractor     # Personen-Extraktion
+```
 
-# Mit Fabric AI
-fabric apply summarize,keywords,tags -r "$OBSIDIAN_VAULT"
-fabric apply categorize -r "$OBSIDIAN_VAULT" -o rules/categorize.yaml
+## Task Shortcuts
+
+```bash
+# Installation
+task setup              # Komplette Installation (uv + Fabric)
+
+# Vault Setup
+task init-vault        # PARA-Struktur erstellen
+task cleanup-move      # Alte Ordner migrieren
+
+# Daily Notes
+task daily-create      # Heute
+task daily-week        # Letzte Woche
+task daily-link        # Auto-Linking
+
+# YouTube
+task yt-summary URL="https://youtube.com/..."   # AI-Summary
+task yt-wisdom URL="https://youtube.com/..."    # Extract Wisdom
+task yt-list-patterns                            # Alle Patterns
+
+# Organisation
+task organize          # Bootstrap-Workflow
+task build-moc         # MOCs generieren
+task build-clusters    # Cluster-Maps
 ```
 
 ## Features

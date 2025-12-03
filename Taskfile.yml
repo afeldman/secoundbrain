@@ -3,22 +3,14 @@ version: "3"
 vars:
   PROJECT_NAME: fabric-second-brain
   VAULT: '{{.OBSIDIAN_VAULT | default "~/Obsidian"}}'
-  PYTHON: python3
 
 tasks:
-  # Installation & Setup
-  venv:
-    desc: Create virtual environment
-    cmds:
-      - python3 -m venv .venv
-      - echo "✅ Virtual environment created. Activate with: source .venv/bin/activate"
-    status:
-      - test -d .venv
-
+  # Installation & Setup mit uv
   install:
-    desc: Install Python dependencies (requires active venv)
+    desc: Install project with uv (modern Python package manager)
     cmds:
-      - pip install -r requirements.txt
+      - uv sync
+      - echo "✅ Project installed with uv. All scripts are now available!"
 
   install-fabric:
     desc: Install Fabric AI
@@ -27,11 +19,10 @@ tasks:
       - fabric --setup
 
   setup:
-    desc: Complete setup - create venv and install all dependencies
+    desc: Complete setup - install uv project and Fabric AI
     cmds:
-      - task: venv
-      - echo "⚠️  Aktiviere jetzt das venv mit: source .venv/bin/activate"
-      - echo "Dann führe aus: task install && task install-fabric"
+      - task: install
+      - task: install-fabric
 
   check-vault:
     desc: Check if Obsidian vault exists
@@ -44,67 +35,73 @@ tasks:
         fi
         echo "✅ Vault gefunden: {{.VAULT}}"
 
+  # Vault Initialization
   init-vault:
     desc: Initialisiere PARA-Struktur im Vault
     cmds:
-      - "{{.PYTHON}} init_vault.py"
+      - uv run init-vault
 
   init-vault-info:
     desc: Zeige Info über bestehende Vault-Inhalte
     cmds:
-      - "{{.PYTHON}} init_vault.py --info"
+      - uv run init-vault --info
 
   cleanup-analyze:
     desc: Analysiere Ordner die in PARA verschoben werden sollten
     cmds:
-      - "{{.PYTHON}} cleanup_vault.py --analyze"
+      - uv run cleanup-vault --analyze
 
   cleanup-dry-run:
     desc: Zeige was beim Cleanup passieren würde
     cmds:
-      - "{{.PYTHON}} cleanup_vault.py --dry-run"
+      - uv run cleanup-vault --dry-run
 
   cleanup-move:
     desc: Verschiebe alte Ordner in PARA-Struktur
     cmds:
-      - "{{.PYTHON}} cleanup_vault.py --move"
+      - uv run cleanup-vault --move
 
   # Daily Notes
   daily-create:
     desc: Erstelle Daily Note für heute
     cmds:
-      - "{{.PYTHON}} create_dailies.py --create --days 1"
+      - uv run create-dailies --create --days 1
 
   daily-week:
     desc: Erstelle Daily Notes für die letzte Woche
     cmds:
-      - "{{.PYTHON}} create_dailies.py --create --days 7"
+      - uv run create-dailies --create --days 7
 
   daily-scan:
     desc: Zeige kürzlich geänderte Dateien
     cmds:
-      - "{{.PYTHON}} create_dailies.py --scan --days 3"
+      - uv run create-dailies --scan --days 3
 
   daily-link:
     desc: Verlinke kürzlich geänderte Dateien in Daily Notes
     cmds:
-      - "{{.PYTHON}} create_dailies.py --link-recent --days 3"
+      - uv run create-dailies --link-recent --days 3
 
   # YouTube Workflow
   yt-list-patterns:
     desc: Zeige verfügbare Fabric Patterns
     cmds:
-      - "{{.PYTHON}} youtube_workflow.py --list-patterns"
+      - uv run youtube --list-patterns
 
   yt-extract:
     desc: 'YouTube Video extrahieren (Nutzung: task yt-extract URL="https://youtube.com/...")'
     cmds:
-      - "{{.PYTHON}} youtube_workflow.py {{.URL}}"
+      - uv run youtube {{.URL}}
 
   yt-wisdom:
     desc: 'YouTube mit extract_wisdom Pattern (Nutzung: task yt-wisdom URL="https://youtube.com/...")'
     cmds:
-      - "{{.PYTHON}} youtube_workflow.py {{.URL}} --pattern extract_wisdom"
+      - uv run youtube {{.URL}} --pattern extract_wisdom
+
+  yt-summary:
+    desc: 'YouTube mit AI-Summary (Nutzung: task yt-summary URL="https://youtube.com/...")'
+    cmds:
+      - uv run youtube {{.URL}} --ai-summary
 
   # Main Workflows
   organize:
@@ -115,38 +112,38 @@ tasks:
   rename:
     desc: Dateien nach Regeln umbenennen
     cmds:
-      - "{{.PYTHON}} organize.py rename --rules rules/rename.yaml"
+      - uv run organize rename --rules rules/rename.yml
 
   move:
     desc: Dateien in PARA-Struktur verschieben
     cmds:
-      - "{{.PYTHON}} organize.py move --rules rules/categorize.yaml"
+      - uv run organize move --rules rules/categorize.yml
 
   tags:
     desc: Tags normalisieren und bereinigen
     cmds:
-      - "{{.PYTHON}} organize.py tags --rules rules/tags.yaml"
+      - uv run organize tags --rules rules/tags.yml
 
   # Generators
   extract-projects:
     desc: Projekt-Tags aus Notizen extrahieren
     cmds:
-      - "{{.PYTHON}} generators/project_extractor.py"
+      - uv run project-extractor
 
   extract-people:
     desc: Personen aus Notizen extrahieren
     cmds:
-      - "{{.PYTHON}} generators/people_extractor.py"
+      - uv run people-extractor
 
   build-moc:
     desc: Maps of Content generieren
     cmds:
-      - "{{.PYTHON}} generators/moc_builder.py"
+      - uv run moc-builder
 
   build-clusters:
     desc: Semantische Cluster-Maps erstellen
     cmds:
-      - "{{.PYTHON}} generators/cluster_map.py"
+      - uv run cluster-map
 
   # Fabric AI Integration
   fabric-analyze:

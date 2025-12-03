@@ -25,6 +25,28 @@ dependencies = [
     "PyYAML>=6.0",
 ]
 
+[project.scripts]
+# Haupt-Organisationstools
+organize = "organize:main"
+init-vault = "init_vault:main"
+cleanup-vault = "cleanup_vault:main"
+
+# Daily Notes
+create-dailies = "create_dailies:main"
+
+# YouTube Workflow
+youtube = "youtube_workflow:main"
+
+# Generators
+moc-builder = "generators.moc_builder:main"
+people-extractor = "generators.people_extractor:main"
+project-extractor = "generators.project_extractor:main"
+cluster-map = "generators.cluster_map:main"
+
+# Auto-Tools
+auto-yaml-header = "auto_yaml_header:main"
+auto-tags = "auto_tags:main"
+
 [project.urls]
 Homepage = "https://github.com/afeldman/fabric-second-brain"
 Repository = "https://github.com/afeldman/fabric-second-brain"
@@ -33,6 +55,9 @@ Issues = "https://github.com/afeldman/fabric-second-brain/issues"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = []
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
