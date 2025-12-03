@@ -54,6 +54,21 @@ tasks:
     cmds:
       - "{{.PYTHON}} init_vault.py --info"
 
+  cleanup-analyze:
+    desc: Analysiere Ordner die in PARA verschoben werden sollten
+    cmds:
+      - "{{.PYTHON}} cleanup_vault.py --analyze"
+
+  cleanup-dry-run:
+    desc: Zeige was beim Cleanup passieren würde
+    cmds:
+      - "{{.PYTHON}} cleanup_vault.py --dry-run"
+
+  cleanup-move:
+    desc: Verschiebe alte Ordner in PARA-Struktur
+    cmds:
+      - "{{.PYTHON}} cleanup_vault.py --move"
+
   # Main Workflows
   organize:
     desc: Vollständige Vault-Organisation ausführen

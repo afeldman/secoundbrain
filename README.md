@@ -153,3 +153,21 @@ python3 init_vault.py --dry-run
 task init-vault
 task init-vault-info
 ```
+
+### Vault aufräumen
+
+```bash
+# Analysiere alte Ordner im Root
+python3 cleanup_vault.py --analyze
+
+# Zeige was verschoben würde
+python3 cleanup_vault.py --dry-run
+
+# Verschiebe Ordner in PARA-Struktur
+python3 cleanup_vault.py --move
+
+# Oder mit Task
+task cleanup-analyze
+task cleanup-dry-run
+task cleanup-move
+```
