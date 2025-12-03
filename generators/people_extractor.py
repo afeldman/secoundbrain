@@ -3,7 +3,7 @@ import re
 import frontmatter
 from pathlib import Path
 
-VAULT = os.path.expanduser("~/Obsidian")
+VAULT = Path(os.environ.get("OBSIDIAN_VAULT", "~/Obsidian")).expanduser()
 
 name_pattern = re.compile(r"\b[A-Z][a-z]+\s[A-Z][a-z]+\b")
 

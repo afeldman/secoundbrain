@@ -2,7 +2,7 @@ import os
 import frontmatter
 from pathlib import Path
 
-VAULT = os.path.expanduser("~/Obsidian")
+VAULT = Path(os.environ.get("OBSIDIAN_VAULT", "~/Obsidian")).expanduser()
 
 def main():
     for f in Path(VAULT).rglob("*.md"):

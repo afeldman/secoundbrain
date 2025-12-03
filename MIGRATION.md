@@ -3,6 +3,7 @@
 ## Aktuelle Situation
 
 Dein Vault `/Users/anton.feldmann/lynq/` enthält:
+
 - ✅ PARA-Ordner wurden erstellt (01_Projects, 02_Areas, 03_Resources, 04_Archive)
 - 18 Projekt-Ordner im Root-Verzeichnis
 - 1 Markdown-Datei: `00-Projects-Index.md`
@@ -51,6 +52,7 @@ export OBSIDIAN_VAULT="/Users/anton.feldmann/lynq"
 ```
 
 Dies führt aus:
+
 1. YAML Frontmatter normalisieren
 2. Inhalte analysieren (Summaries, Keywords, Tags)
 3. Auto-Kategorisierung

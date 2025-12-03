@@ -6,11 +6,18 @@ import yaml
 import frontmatter
 from pathlib import Path
 
+# Script-Verzeichnis ermitteln
+SCRIPT_DIR = Path(__file__).parent.resolve()
+
 # Vault-Pfad aus Umgebungsvariable, Default: ~/Obsidian
 VAULT = Path(os.environ.get("OBSIDIAN_VAULT", "~/Obsidian")).expanduser()
 
 def load_rules(path):
-    with open(path) as f:
+    # Wenn relativer Pfad, relativ zum Script-Verzeichnis auflösen
+    rules_path = Path(path)
+    if not rules_path.is_absolute():
+        rules_path = SCRIPT_DIR / path
+    with open(rules_path) as f:
         return yaml.safe_load(f)
 
 def rename_file(file, rules):

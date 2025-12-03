@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import frontmatter
 
-VAULT = os.path.expanduser("~/Obsidian")
+VAULT = Path(os.environ.get("OBSIDIAN_VAULT", "~/Obsidian")).expanduser()
 
 def build_moc(category, path):
     output = Path(VAULT) / f"{category}_Index.md"

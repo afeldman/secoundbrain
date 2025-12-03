@@ -1,0 +1,20 @@
+rules:
+  - tag: project
+    keywords:
+      ["deadline", "milestone", "deliverable", "Jira", "Projekt", "Sprint"]
+
+  - tag: ai
+    keywords:
+      ["PyTorch", "TensorRT", "YOLO", "Transformer", "Neural Network", "LLM"]
+
+  - tag: obsidian
+    keywords: ["Obsidian", "Dataview", "Templater", "Vault"]
+
+  - tag: business
+    keywords: ["ROI", "Business Plan", "Kunde", "Investor", "Pitch"]
+
+  - tag: research
+    keywords: ["Paper", "Study", "Dataset", "Experiment", "Hypothesis"]
+
+  - tag: personal
+    keywords: ["Amanda", "Tagebuch", "Journal", "Gefühl", "Gebet"]

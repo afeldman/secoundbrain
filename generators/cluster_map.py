@@ -1,25 +1,36 @@
+#!/usr/bin/env python3
 import os
 from pathlib import Path
-import frontmatter
 from collections import defaultdict
+import frontmatter
 
-VAULT = os.path.expanduser("~/Obsidian")
+VAULT = Path(os.environ.get("OBSIDIAN_VAULT", "~/Obsidian")).expanduser()
 
 def main():
     clusters = defaultdict(list)
 
-    for f in Path(VAULT).rglob("*.md"):
-        meta = frontmatter.load(f)
-        topics = meta.get("topics", [])
-        for t in topics:
-            clusters[t].append(f)
+    for f in VAULT.rglob("*.md"):
+        post = frontmatter.load(f)
+        topics = post.get("topics") or []
+        tags = post.get("tags") or []
 
-    output = Path(VAULT) / "Semantic_Clusters.md"
+        # Topics priorisieren, ansonsten Tags nutzen
+        labels = topics if topics else tags
 
-    with open(output, "w") as out:
+        for label in labels:
+            label_str = str(label)
+            clusters[label_str].append(f)
+
+    output = VAULT / "Semantic_Clusters.md"
+
+    with open(output, "w", encoding="utf-8") as out:
         out.write("# Semantic Cluster Map\n\n")
-        for topic, files in clusters.items():
-            out.write(f"## {topic}\n")
+        if not clusters:
+            out.write("_Keine Topics/Tags gefunden._\n")
+            return
+
+        for label, files in sorted(clusters.items(), key=lambda x: x[0].lower()):
+            out.write(f"## {label}\n")
             for f in files:
                 out.write(f"- [[{f.stem}]]\n")
             out.write("\n")
