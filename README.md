@@ -193,3 +193,34 @@ task daily-week
 task daily-scan
 task daily-link
 ```
+
+### YouTube Workflow (mit Fabric AI)
+
+```bash
+# Zeige verfügbare Patterns
+python3 youtube_workflow.py --list-patterns
+
+# Einfaches Transkript extrahieren
+python3 youtube_workflow.py "https://youtube.com/watch?v=..."
+
+# Mit Timestamps
+python3 youtube_workflow.py "https://youtube.com/watch?v=..." --timestamps
+
+# Mit Fabric Pattern (extract_wisdom, summarize, etc.)
+python3 youtube_workflow.py "https://youtube.com/watch?v=..." --pattern extract_wisdom
+
+# Mehrere Videos auf einmal
+python3 youtube_workflow.py url1 url2 url3 --pattern summarize
+
+# Oder mit Task
+task yt-list-patterns
+task yt-extract URL="https://youtube.com/watch?v=..."
+task yt-wisdom URL="https://youtube.com/watch?v=..."
+```
+
+**Beliebte Patterns für YouTube:**
+
+- `extract_wisdom` - Extrahiert die wichtigsten Erkenntnisse
+- `summarize` - Kurze Zusammenfassung
+- `analyze_claims` - Analysiert Behauptungen
+- `create_keynote` - Erstellt Präsentations-Outline

@@ -90,6 +90,22 @@ tasks:
     cmds:
       - "{{.PYTHON}} create_dailies.py --link-recent --days 3"
 
+  # YouTube Workflow
+  yt-list-patterns:
+    desc: Zeige verfügbare Fabric Patterns
+    cmds:
+      - "{{.PYTHON}} youtube_workflow.py --list-patterns"
+
+  yt-extract:
+    desc: 'YouTube Video extrahieren (Nutzung: task yt-extract URL="https://youtube.com/...")'
+    cmds:
+      - "{{.PYTHON}} youtube_workflow.py {{.URL}}"
+
+  yt-wisdom:
+    desc: 'YouTube mit extract_wisdom Pattern (Nutzung: task yt-wisdom URL="https://youtube.com/...")'
+    cmds:
+      - "{{.PYTHON}} youtube_workflow.py {{.URL}} --pattern extract_wisdom"
+
   # Main Workflows
   organize:
     desc: Vollständige Vault-Organisation ausführen
