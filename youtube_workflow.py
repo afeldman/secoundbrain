@@ -32,7 +32,7 @@ def extract_youtube_id(url: str) -> str:
     return None
 
 
-def run_fabric_command(args: list, input_text: str = None) -> str:
+def run_fabric_command(args: list, input_text: str = None, raise_on_error: bool = False) -> str:
     """Führt einen Fabric-Befehl aus."""
     cmd = ["fabric"] + args
     
@@ -54,7 +54,10 @@ def run_fabric_command(args: list, input_text: str = None) -> str:
             )
         return result.stdout
     except subprocess.CalledProcessError as e:
-        print(f"❌ Fabric Fehler: {e.stderr}")
+        error_msg = e.stderr.strip() if e.stderr else str(e)
+        print(f"❌ Fabric Fehler: {error_msg}")
+        if raise_on_error:
+            raise
         return None
     except FileNotFoundError:
         print("❌ Fabric ist nicht installiert. Bitte installiere es mit: go install github.com/danielmiessler/fabric@latest")
@@ -65,30 +68,25 @@ def get_youtube_transcript(url: str, with_timestamps: bool = False) -> str:
     """Holt das Transkript von YouTube mit Fabric."""
     print(f"📥 Lade Transkript von YouTube...")
     
+    # Fabric nutzt -y flag für YouTube URL, gibt direkt das Transkript zurück
     args = ["-y", url]
-    if with_timestamps:
-        args.append("--transcript-with-timestamps")
-    else:
-        args.append("--transcript")
     
-    transcript = run_fabric_command(args)
+    transcript = run_fabric_command(args, raise_on_error=False)
+    if not transcript:
+        print("⚠️  Warnung: Transkript konnte nicht geladen werden")
+        return ""
     return transcript
 
 
 def get_youtube_metadata(url: str) -> dict:
-    """Holt Metadaten von YouTube mit Fabric."""
-    print(f"📊 Lade Metadaten...")
-    
-    output = run_fabric_command(["-y", url, "--metadata"])
-    
-    if output:
-        # Parse als JSON falls möglich
-        try:
-            return json.loads(output)
-        except:
-            # Fallback: einfaches Text-Parsing
-            return {"raw": output}
-    return {}
+    """Holt Metadaten von YouTube - extrahiert sie aus dem Transkript."""
+    # Fabric liefert keine separaten Metadaten
+    # Wir können nur die Video-ID extrahieren
+    video_id = extract_youtube_id(url)
+    return {
+        "video_id": video_id,
+        "url": url
+    }
 
 
 def apply_fabric_pattern(content: str, pattern: str) -> str:
@@ -99,8 +97,57 @@ def apply_fabric_pattern(content: str, pattern: str) -> str:
     return result if result else ""
 
 
+def create_structured_summary(transcript: str) -> dict:
+    """Erstellt eine strukturierte Zusammenfassung mit einem Custom AI-Pattern."""
+    print("\n📊 Erstelle strukturierte Zusammenfassung mit AI...")
+    
+    # Truncate transcript wenn zu lang (API Limits)
+    max_chars = 4000  # Konservativer Wert für API Limits
+    truncated = False
+    if len(transcript) > max_chars:
+        print(f"  ⚠️  Transkript zu lang ({len(transcript)} Zeichen), kürze auf {max_chars} Zeichen...")
+        transcript = transcript[:max_chars] + "\n\n[... Rest des Transkripts gekürzt ...]"
+        truncated = True
+    
+    # Nutze das Custom Pattern für Video-Zusammenfassungen
+    print("  → Applying extract_video_summary pattern...")
+    result = apply_fabric_pattern(transcript, 'extract_video_summary')
+    
+    if not result:
+        print("  ⚠️  AI-Verarbeitung fehlgeschlagen, verwende Fallback")
+        return {
+            'summary': '',
+            'tags': [],
+            'content': '',
+            'truncated': truncated
+        }
+    
+    # Parse das Ergebnis
+    summary = {
+        'content': result,
+        'tags': [],
+        'summary': '',
+        'truncated': truncated
+    }
+    
+    # Extrahiere Tags aus dem Ergebnis
+    if '🏷️ TAGS' in result or '## TAGS' in result:
+        lines = result.split('\n')
+        for i, line in enumerate(lines):
+            if 'TAGS' in line and i + 1 < len(lines):
+                # Nächste Zeile enthält die Tags
+                tags_line = lines[i + 1].strip()
+                tags = [t.strip() for t in tags_line.split(',')]
+                summary['tags'] = [t.lower().replace(' ', '-') for t in tags if t][:8]
+                break
+    
+    print(f"  ✅ AI-Zusammenfassung erstellt ({len(result)} Zeichen)")
+    return summary
+
+
 def create_youtube_note(vault_path: Path, url: str, transcript: str, 
-                       metadata: dict, pattern: str = None, title: str = None):
+                       metadata: dict, pattern: str = None, title: str = None,
+                       use_ai_structure: bool = False):
     """Erstellt eine Obsidian-Notiz für ein YouTube-Video."""
     
     # Ordner für YouTube-Notizen
@@ -118,20 +165,32 @@ def create_youtube_note(vault_path: Path, url: str, transcript: str,
     filename = f"{date_stamp}-{safe_title}.md"
     filepath = youtube_dir / filename
     
+    # AI-strukturierte Verarbeitung
+    ai_summary = None
+    if use_ai_structure and transcript:
+        ai_summary = create_structured_summary(transcript)
+    
     # Content verarbeiten
     processed_content = transcript
     
-    if pattern:
+    if pattern and not use_ai_structure:
         processed_content = apply_fabric_pattern(transcript, pattern)
     
     # Frontmatter erstellen
     post = frontmatter.Post("")
+    base_tags = ["youtube", "video"]
+    
+    # AI-generierte Tags hinzufügen
+    if ai_summary and ai_summary.get('tags'):
+        base_tags.extend(ai_summary['tags'])
+    
     post.metadata = {
         "title": title,
         "url": url,
         "date": date_stamp,
-        "tags": ["youtube", "video"],
-        "type": "video-note"
+        "tags": base_tags,
+        "type": "video-note",
+        "ai_processed": use_ai_structure
     }
     
     # Metadaten hinzufügen
@@ -158,8 +217,16 @@ def create_youtube_note(vault_path: Path, url: str, transcript: str,
         if "duration" in metadata:
             content += f"- **Duration**: {metadata.get('duration', 'N/A')}\n"
     
-    content += "\n## 📝 Notes\n\n"
-    content += processed_content
+    # AI-Zusammenfassung hinzufügen
+    if ai_summary and ai_summary.get('content'):
+        content += "\n## 🤖 AI Zusammenfassung\n\n"
+        if ai_summary.get('truncated'):
+            content += "> ⚠️ *Hinweis: Aufgrund der Länge wurde nur der Anfang des Transkripts für die AI-Analyse verwendet.*\n\n"
+        content += ai_summary['content'] + "\n\n"
+        content += "---\n\n"
+    
+    content += "\n## 📝 Vollständiges Transkript\n\n"
+    content += processed_content if not use_ai_structure else transcript
     
     content += "\n\n## 🔗 Related\n\n"
     
@@ -213,6 +280,11 @@ Beispiele:
         help="Fabric Pattern anwenden (z.B. extract_wisdom, summarize, analyze_claims)"
     )
     parser.add_argument(
+        "--ai-summary",
+        action="store_true",
+        help="Erstelle strukturierte AI-Zusammenfassung (Summary + Wisdom + Auto-Tags)"
+    )
+    parser.add_argument(
         "--title",
         help="Custom Titel für die Notiz"
     )
@@ -258,10 +330,8 @@ Beispiele:
         try:
             # Transkript holen
             transcript = get_youtube_transcript(url, args.timestamps)
-            if not transcript:
-                print("⚠️  Konnte Transkript nicht laden")
-                continue
             
+            # Auch bei leerem Transkript fortfahren (Notiz ohne Content)
             # Metadaten holen
             metadata = get_youtube_metadata(url)
             
@@ -272,7 +342,8 @@ Beispiele:
                 transcript,
                 metadata,
                 pattern=args.pattern,
-                title=args.title if len(args.urls) == 1 else None
+                title=args.title if len(args.urls) == 1 else None,
+                use_ai_structure=args.ai_summary
             )
             
         except Exception as e:
