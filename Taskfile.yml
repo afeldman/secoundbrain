@@ -44,6 +44,16 @@ tasks:
         fi
         echo "✅ Vault gefunden: {{.VAULT}}"
 
+  init-vault:
+    desc: Initialisiere PARA-Struktur im Vault
+    cmds:
+      - "{{.PYTHON}} init_vault.py"
+
+  init-vault-info:
+    desc: Zeige Info über bestehende Vault-Inhalte
+    cmds:
+      - "{{.PYTHON}} init_vault.py --info"
+
   # Main Workflows
   organize:
     desc: Vollständige Vault-Organisation ausführen

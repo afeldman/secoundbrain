@@ -15,6 +15,9 @@ pip install -r requirements.txt
 # Umgebungsvariable setzen
 export OBSIDIAN_VAULT="$HOME/Obsidian"
 
+# PARA-Struktur im Vault erstellen
+python3 init_vault.py
+
 # Vollständige Vault-Organisation ausführen
 ./bootstrap-secondbrain.sh
 ```
@@ -24,6 +27,7 @@ export OBSIDIAN_VAULT="$HOME/Obsidian"
 ```bash
 ./install.sh              # Erstellt .venv und installiert alles
 source .venv/bin/activate # Aktivieren
+python3 init_vault.py     # Vault-Struktur erstellen
 ./bootstrap-secondbrain.sh # Ausführen
 ```
 
@@ -121,7 +125,7 @@ fabric --setup
 
 Das Projekt organisiert deinen Vault nach der PARA-Methode:
 
-```
+```text
 ~/Obsidian/
 ├── 01_Projects/        # Aktive Projekte mit Deadlines
 ├── 02_Areas/           # Verantwortungsbereiche
@@ -131,4 +135,21 @@ Das Projekt organisiert deinen Vault nach der PARA-Methode:
 ├── Areas_Index.md
 ├── Resources_Index.md
 └── Semantic_Clusters.md
+```
+
+### Vault initialisieren
+
+```bash
+# PARA-Ordner erstellen
+python3 init_vault.py
+
+# Info über bestehende Inhalte anzeigen
+python3 init_vault.py --info
+
+# Dry-Run (zeigt nur was passieren würde)
+python3 init_vault.py --dry-run
+
+# Oder mit Task
+task init-vault
+task init-vault-info
 ```
