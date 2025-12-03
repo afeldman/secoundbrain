@@ -69,6 +69,27 @@ tasks:
     cmds:
       - "{{.PYTHON}} cleanup_vault.py --move"
 
+  # Daily Notes
+  daily-create:
+    desc: Erstelle Daily Note für heute
+    cmds:
+      - "{{.PYTHON}} create_dailies.py --create --days 1"
+
+  daily-week:
+    desc: Erstelle Daily Notes für die letzte Woche
+    cmds:
+      - "{{.PYTHON}} create_dailies.py --create --days 7"
+
+  daily-scan:
+    desc: Zeige kürzlich geänderte Dateien
+    cmds:
+      - "{{.PYTHON}} create_dailies.py --scan --days 3"
+
+  daily-link:
+    desc: Verlinke kürzlich geänderte Dateien in Daily Notes
+    cmds:
+      - "{{.PYTHON}} create_dailies.py --link-recent --days 3"
+
   # Main Workflows
   organize:
     desc: Vollständige Vault-Organisation ausführen

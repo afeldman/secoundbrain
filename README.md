@@ -171,3 +171,25 @@ task cleanup-analyze
 task cleanup-dry-run
 task cleanup-move
 ```
+
+### Daily Notes
+
+```bash
+# Erstelle Daily Note für heute
+python3 create_dailies.py --create --days 1
+
+# Erstelle Daily Notes für letzte Woche
+python3 create_dailies.py --create --days 7
+
+# Scanne kürzlich geänderte Dateien
+python3 create_dailies.py --scan --days 3
+
+# Verlinke geänderte Dateien in Daily Notes
+python3 create_dailies.py --link-recent --days 3
+
+# Oder mit Task
+task daily-create
+task daily-week
+task daily-scan
+task daily-link
+```
