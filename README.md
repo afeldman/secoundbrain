@@ -5,14 +5,26 @@ Automatisierte Second Brain Organisation mit Fabric AI + Obsidian + LM Studio/Ol
 ## Quick Start
 
 ```bash
-# Umgebungsvariable für deinen Obsidian Vault setzen
-export OBSIDIAN_VAULT="$HOME/Obsidian"
+# Virtual Environment erstellen und aktivieren
+python3 -m venv .venv
+source .venv/bin/activate
 
 # Dependencies installieren
 pip install -r requirements.txt
 
+# Umgebungsvariable setzen
+export OBSIDIAN_VAULT="$HOME/Obsidian"
+
 # Vollständige Vault-Organisation ausführen
 ./bootstrap-secondbrain.sh
+```
+
+**Oder mit dem install.sh Script:**
+
+```bash
+./install.sh              # Erstellt .venv und installiert alles
+source .venv/bin/activate # Aktivieren
+./bootstrap-secondbrain.sh # Ausführen
 ```
 
 ## Workflow
@@ -90,6 +102,10 @@ Vorlagen für neue Notizen in `templates/`:
 ### Installation
 
 ```bash
+# Virtual Environment (empfohlen auf macOS)
+python3 -m venv .venv
+source .venv/bin/activate
+
 # Python-Dependencies
 pip install -r requirements.txt
 
@@ -98,6 +114,8 @@ pip install -r requirements.txt
 go install github.com/danielmiessler/fabric@latest
 fabric --setup
 ```
+
+**Hinweis für macOS**: Python ist externally-managed, daher ist ein Virtual Environment erforderlich.
 
 ## Ordnerstruktur
 

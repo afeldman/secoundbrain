@@ -7,6 +7,10 @@
 git clone https://github.com/afeldman/fabric-second-brain.git
 cd fabric-second-brain
 
+# Virtual Environment erstellen und aktivieren
+python3 -m venv .venv
+source .venv/bin/activate
+
 # Python-Dependencies installieren
 pip install -r requirements.txt
 
@@ -18,6 +22,20 @@ fabric --setup
 export OBSIDIAN_VAULT="$HOME/Obsidian"
 
 # Organisation ausführen
+./bootstrap-secondbrain.sh
+```
+
+## Alternative: Mit install.sh
+
+```bash
+# Automatische Installation (erstellt venv und installiert alles)
+./install.sh
+
+# Aktiviere das venv
+source .venv/bin/activate
+
+# Nutze das Tool
+export OBSIDIAN_VAULT="$HOME/Obsidian"
 ./bootstrap-secondbrain.sh
 ```
 

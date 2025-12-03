@@ -7,8 +7,16 @@ vars:
 
 tasks:
   # Installation & Setup
+  venv:
+    desc: Create virtual environment
+    cmds:
+      - python3 -m venv .venv
+      - echo "✅ Virtual environment created. Activate with: source .venv/bin/activate"
+    status:
+      - test -d .venv
+
   install:
-    desc: Install Python dependencies
+    desc: Install Python dependencies (requires active venv)
     cmds:
       - pip install -r requirements.txt
 
@@ -19,11 +27,11 @@ tasks:
       - fabric --setup
 
   setup:
-    desc: Complete setup - install all dependencies
+    desc: Complete setup - create venv and install all dependencies
     cmds:
-      - task: install
-      - task: install-fabric
-      - task: check-vault
+      - task: venv
+      - echo "⚠️  Aktiviere jetzt das venv mit: source .venv/bin/activate"
+      - echo "Dann führe aus: task install && task install-fabric"
 
   check-vault:
     desc: Check if Obsidian vault exists
