@@ -1,6 +1,6 @@
 # Taskfile Usage Guide
 
-This project uses [Task](https://taskfile.dev) for task automation. Task is a modern alternative to Make with a simpler syntax.
+Dieses Projekt nutzt [Task](https://taskfile.dev) für Automatisierung.
 
 ## Installation
 
@@ -8,158 +8,100 @@ This project uses [Task](https://taskfile.dev) for task automation. Task is a mo
 brew install go-task
 ```
 
-## Quick Start
+## Schnellstart
 
 ```bash
-# Show all available tasks
+# Alle verfügbaren Tasks anzeigen
 task --list
 
-# Complete setup (install all dependencies)
+# Setup durchführen
 task setup
 
-# Run code quality checks
-task check
-
-# Auto-fix issues
-task fix
-
-# Run the application
-task run CLI_ARGS="--help"
+# Vollständige Vault-Organisation
+task organize
 ```
 
-## Common Tasks
+## Hauptfunktionen
 
-### Development
+### Vault-Organisation
 
 ```bash
-task install              # Install project dependencies
-task install-dev          # Install development tools
-task install-optional     # Install optional system dependencies (pandoc, ffmpeg, etc.)
-task install-fabric       # Install Fabric AI
-
-task dev                  # Development mode
-task doctor               # Run diagnostics
-task debug                # Show debug info
+task organize           # Vollständige Organisation (bootstrap-secondbrain.sh)
+task rename            # Dateien umbenennen
+task move              # Dateien in PARA-Struktur verschieben
+task tags              # Tags normalisieren
 ```
 
-### Code Quality
+### Content-Generierung
 
 ```bash
-task lint                 # Run linter
-task lint-fix             # Run linter with auto-fix
-task format               # Format code
-task format-check         # Check formatting without changes
-task typecheck            # Run type checking
-
-task check                # Run all checks
-task fix                  # Auto-fix all issues
+task extract-projects  # Projekt-Tags extrahieren
+task extract-people    # Personen extrahieren
+task build-moc         # Maps of Content generieren
+task build-clusters    # Semantische Cluster-Maps
 ```
 
-### Testing
+### Fabric AI Integration
 
 ```bash
-task test                 # Run tests (when available)
-task test-ingest          # Test document ingestion
+task fabric-analyze     # Inhaltsanalyse (Summaries, Keywords, Tags)
+task fabric-categorize  # Auto-Kategorisierung
+task fabric-normalize   # YAML Frontmatter normalisieren
 ```
 
-### Application Commands
+### Setup & Utilities
 
 ```bash
-task init                 # Initialize Obsidian vault
-task config               # Show configuration
-task doctor               # Run system diagnostics
-
-# Vault management
-task vault-init           # Initialize vault
-task vault-organize       # AI-powered organization
-task vault-classify       # Auto-classify notes
+task setup             # Komplettes Setup
+task install           # Python-Dependencies installieren
+task install-fabric    # Fabric AI installieren
+task check-vault       # Vault-Pfad überprüfen
+task clean             # Temporäre Dateien löschen
 ```
 
-### Git Workflow
+### Dokumentation
 
 ```bash
-task commit               # Run checks before commit
-task pre-commit           # Pre-commit hook
-task tag TAG=v0.2.0       # Create and push git tag
+task docs              # README anzeigen
+task help              # Task-Liste anzeigen
+task commit            # Git-Status anzeigen
 ```
 
-### Cleanup
+## Umgebungsvariablen
 
 ```bash
-task clean                # Remove caches and generated files
-task clean-logs           # Remove log files
-task clean-all            # Full cleanup including venv
+# Vault-Pfad setzen (Standard: ~/Obsidian)
+export OBSIDIAN_VAULT="/pfad/zu/deinem/vault"
+
+# Dann Tasks ausführen
+task organize
 ```
 
-### Build & Release
+## Workflow-Beispiel
+
+Typischer Workflow für Vault-Organisation:
 
 ```bash
-task build                # Build distribution packages
-task publish-test         # Publish to TestPyPI
-task publish              # Publish to PyPI
+# 1. Setup (einmalig)
+task setup
+
+# 2. Fabric AI konfigurieren (einmalig)
+task install-fabric
+
+# 3. Vault organisieren
+task organize
+
+# Oder Schritt für Schritt:
+task fabric-normalize    # Frontmatter aufräumen
+task fabric-analyze      # Inhalte analysieren
+task rename              # Dateien umbenennen
+task move                # In Ordner verschieben
+task tags                # Tags bereinigen
+task build-moc           # Index-Seiten erstellen
 ```
 
-### Utilities
+## Tipps
 
-```bash
-task version              # Show version
-task deps                 # Show dependencies
-task deps-outdated        # Check for updates
-task deps-update          # Update dependencies
-task tree                 # Show project structure
-
-task docs                 # Show README
-task docs-install         # Show installation guide
-task docs-changelog       # Show changelog
-```
-
-## Custom Task Execution
-
-Run the CLI with custom arguments:
-
-```bash
-task run CLI_ARGS="ingest document.pdf --title 'My Doc' --tags 'important'"
-task run CLI_ARGS="wisdom https://youtube.com/watch?v=example"
-task run CLI_ARGS="search 'machine learning'"
-```
-
-## Pre-Commit Hook
-
-To automatically run checks before commits:
-
-```bash
-# Add to .git/hooks/pre-commit
-#!/bin/bash
-task pre-commit
-```
-
-## Tips
-
-- Use `task --summary <taskname>` to see task description
-- Use `task --list-all` to show all tasks including internal ones
-- Tasks can be chained: `task clean check build`
-- Set variables: `task tag TAG=v1.0.0`
-
-## Troubleshooting
-
-If a task fails:
-
-1. Run `task doctor` to check system dependencies
-2. Run `task install` to ensure dependencies are up-to-date
-3. Run `task clean` to clear caches
-4. Check logs in the `logs/` directory
-
-## Task Dependencies
-
-Some tasks depend on system tools:
-
-- `install-optional`: Requires `brew` (macOS)
-- `install-fabric`: Requires `go`
-- `watch`: Requires `fswatch` on macOS
-- `tree`: Requires `tree` utility
-
-Install missing tools:
-
-```bash
-brew install fswatch tree
-```
+- `task --summary <taskname>` zeigt Task-Beschreibung
+- Tasks können verkettet werden: `task rename move tags`
+- Vault-Pfad über `OBSIDIAN_VAULT` konfigurierbar

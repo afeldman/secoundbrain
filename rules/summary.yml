@@ -1,0 +1,4 @@
+summary:
+  max_length: 300
+  include_keywords: true
+  include_entities: true

@@ -2,6 +2,63 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2024-12-03
+
+### Changed
+
+- **BREAKING**: Vollständiges Refactoring zu Script-basierter Architektur
+- Entfernung der komplexen CLI-Struktur (`src/fabric_second_brain/`)
+- Vereinfachung zu eigenständigen Python-Scripts
+
+### Added
+
+- `organize.py` - Hauptscript für Datei-Organisation
+- `bootstrap-secondbrain.sh` - Automatisierter Workflow
+- `fabric-secondbrain.yaml` - Workflow-Definition
+- Generators:
+  - `project_extractor.py` - Projekt-Tag-Extraktion
+  - `people_extractor.py` - Personen-Extraktion
+  - `moc_builder.py` - Maps of Content Generierung
+  - `cluster_map.py` - Semantische Cluster-Maps
+- Rules:
+  - `categorize.yml` - PARA-Kategorisierung
+  - `rename.yml` - Dateinamen-Patterns
+  - `tags.yml` - Tag-Bereinigung
+- Templates:
+  - `journal.md`, `person.md`, `project.md`, `research.md`, `resource.md`
+- Vereinfachte Installation und Dokumentation
+
+### Removed
+
+- Komplexe CLI mit Click-Framework
+- Document/Media Processors (Pandoc, PDF, Office, etc.)
+- LM Studio / Ollama Integration-Code
+- Ingest/Wisdom/Search/Vision Commands
+- Config-Management-System
+
+### Focus
+
+Das Projekt fokussiert sich jetzt auf:
+
+- ✅ Fabric AI Integration
+- ✅ Obsidian Vault Organisation
+- ✅ YAML/Frontmatter Management
+- ✅ PARA-Methode (Projects/Areas/Resources/Archive)
+- ✅ Einfache, wartbare Scripts
+
+## [0.1.0] - 2024-11-XX
+
+### Added
+
+- Initial CLI-based implementation
+- Comprehensive document ingestion (PDF, DOCX, XLSX, etc.)
+- Media processing (MP4, MP3, YouTube)
+- Fabric AI integration
+- LM Studio / Ollama support
+- Vision analysis
+- Semantic search
+- Auto-classification
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 

@@ -1,125 +1,76 @@
 # Installation Guide
 
-## Core Requirements
+## Schnellstart
 
 ```bash
-# Install Python 3.11+
-# Install uv (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install Fabric Second Brain
+# Repository klonen
+git clone https://github.com/afeldman/fabric-second-brain.git
 cd fabric-second-brain
-uv pip install -e .
+
+# Python-Dependencies installieren
+pip install -r requirements.txt
+
+# Fabric AI installieren
+go install github.com/danielmiessler/fabric@latest
+fabric --setup
+
+# Umgebungsvariable setzen
+export OBSIDIAN_VAULT="$HOME/Obsidian"
+
+# Organisation ausführen
+./bootstrap-secondbrain.sh
 ```
 
-## Optional Dependencies
+## Voraussetzungen
 
-For full document and media support, install these optional tools:
-
-### macOS (Homebrew)
-
-```bash
-# Document processing
-brew install pandoc        # Universal document converter
-brew install poppler       # PDF tools (includes pdftotext)
-brew install ghostscript   # PostScript processing
-
-# Media processing
-brew install ffmpeg        # Audio/video processing
-```
-
-### Ubuntu/Debian
-
-```bash
-# Document processing
-sudo apt update
-sudo apt install -y pandoc poppler-utils ghostscript
-
-# Media processing
-sudo apt install -y ffmpeg
-```
-
-### Arch Linux
-
-```bash
-# Document processing
-sudo pacman -S pandoc poppler ghostscript
-
-# Media processing
-sudo pacman -S ffmpeg
-```
-
-## Verification
-
-Check if tools are installed:
-
-```bash
-# Document tools
-pandoc --version
-pdftotext -v
-ps2txt --version
-
-# Media tools
-ffmpeg -version
-```
+- **Python** ≥ 3.11
+- **Go** (für Fabric AI)
+- **Obsidian** Vault
 
 ## Fabric AI Setup
 
-Install and configure Fabric AI:
+Fabric ist das Herzstück für KI-gestützte Analyse:
 
 ```bash
-# Install Fabric
-# See: https://github.com/danielmiessler/fabric
+# Installation
+go install github.com/danielmiessler/fabric@latest
 
-# Configure Fabric with your AI provider
+# Konfiguration (wähle deinen AI Provider)
 fabric --setup
 ```
 
-## LM Studio / Ollama (Optional)
+Unterstützte Provider:
 
-For local AI models:
+- OpenAI
+- Anthropic (Claude)
+- Ollama (lokal)
+- LM Studio (lokal)
 
-### LM Studio
+## Obsidian Vault
 
-1. Download from: https://lmstudio.ai
-2. Install and launch
-3. Download a model (e.g., smollm3-3b)
-4. Start server mode
-
-### Ollama
+Setze den Pfad zu deinem Vault:
 
 ```bash
-# macOS
-brew install ollama
+# Temporär
+export OBSIDIAN_VAULT="$HOME/Obsidian"
 
-# Linux
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Pull a model
-ollama pull llama2
+# Permanent (in ~/.zshrc oder ~/.bashrc)
+echo 'export OBSIDIAN_VAULT="$HOME/Obsidian"' >> ~/.zshrc
 ```
 
-## Configuration
+## Verwendung mit Task
 
-Initialize your Second Brain:
+Optional kannst du [Task](https://taskfile.dev) für komfortablere Befehle nutzen:
 
 ```bash
-second-brain init
-second-brain config set-model <your-model>
-second-brain config set-vault ~/Obsidian
+# Installation
+brew install go-task
+
+# Verfügbare Tasks
+task --list
+
+# Beispiele
+task organize           # Vollständige Organisation
+task rename            # Nur Dateien umbenennen
+task build-moc         # Maps of Content generieren
 ```
-
-## Doctor Command
-
-Verify your setup:
-
-```bash
-second-brain doctor
-```
-
-This will check:
-
-- ✅ Fabric installation
-- ✅ Vault path exists
-- ✅ LM Studio/Ollama server connectivity
-- ✅ Optional tools (pandoc, ffmpeg, etc.)

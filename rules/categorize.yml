@@ -1,0 +1,16 @@
+categories:
+  Projects:
+    folder: "01_Projects"
+    tags: ["project", "todo", "task", "deadline"]
+
+  Areas:
+    folder: "02_Areas"
+    tags: ["area", "responsibility", "role", "department"]
+
+  Resources:
+    folder: "03_Resources"
+    tags: ["research", "knowledge", "reference", "info"]
+
+  Archives:
+    folder: "04_Archive"
+    tags: ["archive", "old", "inactive"]

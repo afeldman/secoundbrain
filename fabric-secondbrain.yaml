@@ -1,0 +1,46 @@
+version: 1
+
+# Wird zur Laufzeit über die Umgebungsvariable OBSIDIAN_VAULT gesetzt.
+# Fallback (im Shell-Script): ~/Obsidian
+vault_path: "${OBSIDIAN_VAULT:-~/Obsidian}"
+
+steps:
+  - name: "YAML Standardisieren"
+    commands:
+      - "fabric apply yaml --add-missing --normalize -r {{vault}}"
+
+  - name: "Inhalt analysieren"
+    commands:
+      - "fabric apply summarize,keywords,tags -r {{vault}}"
+
+  - name: "Automatische Kategorien"
+    commands:
+      - "fabric apply categorize -r {{vault}} -o rules/categorize.yaml"
+
+  - name: "Projekte extrahieren"
+    commands:
+      - "python3 generators/project_extractor.py"
+
+  - name: "Personen extrahieren"
+    commands:
+      - "python3 generators/people_extractor.py"
+
+  - name: "Dateien automatisch umbenennen"
+    commands:
+      - "python3 organize.py rename --rules rules/rename.yaml"
+
+  - name: "Ordnerstruktur neu bauen"
+    commands:
+      - "python3 organize.py move --rules rules/categorize.yaml"
+
+  - name: "Tags bereinigen"
+    commands:
+      - "python3 organize.py tags --rules rules/tags.yaml"
+
+  - name: "Maps of Content generieren"
+    commands:
+      - "python3 generators/moc_builder.py"
+
+  - name: "Semantic Cluster Maps"
+    commands:
+      - "python3 generators/cluster_map.py"
