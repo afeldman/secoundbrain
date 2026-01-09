@@ -38,7 +38,7 @@ secondbrain does not answer:
 secondbrain is a pure consumer.
 
 Canonical flow:
-
+```bash
 Systems / Adapters
 	↓
 errorbrain (Verdicts, English, canonical)
@@ -46,7 +46,7 @@ errorbrain (Verdicts, English, canonical)
 Markdown / Obsidian notes
 	↓
 secondbrain (indexing, linking, retrieval)
-
+```
 - Data flow is one-way
 - All inputs are read-only
 - secondbrain never influences upstream systems
