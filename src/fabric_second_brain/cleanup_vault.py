@@ -72,48 +72,48 @@ def suggest_para_location(folder_name: str) -> str:
     return "01_Projects"
 
 
-def show_analysis(vault_path: Path, old_folders: list):
-    """Zeigt Analyse der alten Ordner."""
-    
-    print(f"\n📊 Vault-Analyse: {vault_path}")
-    print(f"\n🗂  Gefundene Ordner außerhalb der PARA-Struktur: {len(old_folders)}\n")
-    
+def show_overview(vault_path: Path, old_folders: list):
+    """Show an overview of folders outside the PARA structure.
+
+    Args:
+        vault_path (Path): Path to the vault root.
+        old_folders (list): List of Path objects for folders outside PARA.
+    """
+    print(f"\n📊 Vault Structure Overview: {vault_path}")
+    print(f"\n🗂  Folders outside PARA: {len(old_folders)}\n")
     if not old_folders:
-        print("✅ Alle Ordner sind bereits in der PARA-Struktur!")
+        print("✅ All folders are already in the PARA structure!")
         return
-    
     suggestions = {}
     for folder in old_folders:
         suggested = suggest_para_location(folder.name)
-        if suggested not in suggestions:
-            suggestions[suggested] = []
-        suggestions[suggested].append(folder)
-    
+        suggestions.setdefault(suggested, []).append(folder)
     for para_folder in ["01_Projects", "02_Areas", "03_Resources", "04_Archive"]:
         if para_folder in suggestions:
             folders = suggestions[para_folder]
-            print(f"\n📁 {para_folder}/ ({len(folders)} Ordner):")
+            print(f"\n📁 {para_folder}/ ({len(folders)} folders):")
             for folder in folders:
-                # Zähle Dateien
                 md_files = list(folder.rglob("*.md"))
-                print(f"   → {folder.name:40} ({len(md_files)} .md Dateien)")
+                print(f"   → {folder.name:40} ({len(md_files)} .md files)")
 
 
 def move_folders(vault_path: Path, old_folders: list, dry_run: bool = True):
-    """Verschiebt Ordner in die PARA-Struktur."""
-    
-    print(f"\n{'🔍 DRY RUN - ' if dry_run else '📦 '}Verschiebe Ordner...\n")
-    
+    """Move folders into the PARA structure.
+
+    Args:
+        vault_path (Path): Path to the vault root.
+        old_folders (list): List of Path objects for folders outside PARA.
+        dry_run (bool): If True, only show what would be moved.
+    """
+    print(f"\n{'🔍 DRY RUN - ' if dry_run else '📦 '}Moving folders...\n")
     moved = 0
     for folder in old_folders:
         suggested = suggest_para_location(folder.name)
         target_dir = vault_path / suggested
         target_path = target_dir / folder.name
-        
         if target_path.exists():
-            print(f"⚠️  Überspringe {folder.name} - existiert bereits in {suggested}")
+            print(f"⚠️  Skipping {folder.name} - already exists in {suggested}")
             continue
-        
         if dry_run:
             print(f"[DRY] {folder.name} → {suggested}/")
         else:
@@ -122,65 +122,57 @@ def move_folders(vault_path: Path, old_folders: list, dry_run: bool = True):
                 print(f"✅ {folder.name} → {suggested}/")
                 moved += 1
             except Exception as e:
-                print(f"❌ Fehler bei {folder.name}: {e}")
-    
+                print(f"❌ Error moving {folder.name}: {e}")
     if dry_run:
-        print(f"\n💡 Nutze --move um die Ordner tatsächlich zu verschieben")
+        print(f"\n💡 Use --move to actually move the folders")
     else:
-        print(f"\n✅ {moved} Ordner erfolgreich verschoben!")
+        print(f"\n✅ {moved} folders moved successfully!")
 
 
 def main():
+    """Command-line interface for vault cleanup.
+
+    Example:
+        $ python cleanup_vault.py --overview
+        $ python cleanup_vault.py --move
+    """
     import argparse
-    
     parser = argparse.ArgumentParser(
-        description="Vault Cleanup - Alte Ordner analysieren und in PARA verschieben"
+        description="Vault Cleanup - Overview and move folders into PARA structure"
     )
     parser.add_argument(
-        "--analyze",
+        "--overview",
         action="store_true",
-        help="Zeige Analyse der Ordner (default)"
+        help="Show overview of folders (default)"
     )
     parser.add_argument(
         "--move",
         action="store_true",
-        help="Verschiebe Ordner in PARA-Struktur"
+        help="Move folders into PARA structure"
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Zeige was verschoben würde, ohne zu verschieben"
+        help="Show what would be moved, without moving"
     )
-    
     args = parser.parse_args()
-    
-    # Default: analyze
-    if not args.move and not args.dry_run:
-        args.analyze = True
-    
     vault_path = get_vault_path()
-    
     if not vault_path.exists():
-        print(f"❌ Vault nicht gefunden: {vault_path}")
+        print(f"❌ Vault not found: {vault_path}")
         sys.exit(1)
-    
     old_folders = find_old_folders(vault_path)
-    
-    if args.analyze or (not args.move and not args.dry_run):
-        show_analysis(vault_path, old_folders)
-    
+    if args.overview or (not args.move and not args.dry_run):
+        show_overview(vault_path, old_folders)
     if args.move or args.dry_run:
         if not old_folders:
-            print("\n✅ Keine Ordner zum Verschieben gefunden!")
+            print("\n✅ No folders to move found!")
             return
-        
         if args.move and not args.dry_run:
-            print("\n⚠️  WARNUNG: Dies verschiebt Ordner!")
-            response = input("Fortfahren? [y/N]: ")
+            print("\n⚠️  WARNING: This will move folders!")
+            response = input("Continue? [y/N]: ")
             if response.lower() != 'y':
-                print("Abgebrochen.")
+                print("Aborted.")
                 return
-        
         move_folders(vault_path, old_folders, dry_run=args.dry_run or not args.move)
 
 

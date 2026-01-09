@@ -1,6 +1,293 @@
+## Project Context
+
+This repository implements secoundbrain, a long-term knowledge, memory, and context system for humans.
+
+secoundbrain is not an analysis engine, not a decision system, and not a source of system truth.
+
+It consumes human-readable content, indexes it, links it, and makes it retrievable over time.
+
+🎯 **Purpose of secoundbrain**
+
+secoundbrain answers questions like:
+
+- “Have we seen something like this before?”
+- “Where is related knowledge documented?”
+- “What did we learn last time?”
+- “How are topics, incidents, and ideas connected over time?”
+
+secoundbrain does not answer:
+
+- why something objectively happened
+- what the root cause is
+- how severe something is
+- what action must be taken
+
+🧭 **Role in the Ecosystem**
+
+secoundbrain is a pure consumer.
+
+Canonical flow:
+
+Systems / Adapters
+	↓
+errorbrain (Verdicts, English, canonical)
+	↓
+Markdown / Obsidian notes
+	↓
+secoundbrain (indexing, linking, retrieval)
+
+- Data flow is one-way
+- All inputs are read-only
+- secoundbrain never influences upstream systems
+
+🧱 **Hard Architecture Rules (non-negotiable)**
+
+- secoundbrain produces no system truth
+- secoundbrain performs no analysis or evaluation
+- secoundbrain assigns no confidence, severity, or scores
+- secoundbrain does not modify verdicts
+- secoundbrain has no write-back channels
+- Removing secoundbrain must not affect any other system
+- If something looks like analysis, decision, or judgement → it does not belong here.
+
+📥 **Inputs (Allowed)**
+
+- Markdown files (e.g. Obsidian vaults)
+- Human-written notes
+- Metadata: tags, dates, references, links
+- References to external systems (IDs, URLs)
+
+❌ **Not Allowed**
+
+- API writes to other systems
+- Event emission
+- Verdict generation
+- Automated feedback loops
+
+🧠 **Internal Data Model Guidelines**
+
+Allowed concepts:
+- notes
+- tags
+- links
+- relationships
+- timelines
+- clusters (descriptive only)
+
+Forbidden concepts:
+- root_cause
+- confidence_score
+- severity_decision
+- recommended_action (as a system decision)
+
+All stored content is contextual and interpretive, not authoritative.
+
+🌍 **Translation & Localization**
+
+secoundbrain may translate human-readable content before storing or indexing it.
+
+Rules:
+- errorbrain output is always English and canonical
+- Translation happens only in secoundbrain
+- Translation is a presentation step, not reasoning
+- Markdown structure must be preserved
+- Code blocks and identifiers must not be changed
+- No summarization or interpretation is allowed
+- English remains the source of truth. Translations are localized views for humans.
+
+Example configuration:
+
+    SECONDBRAIN_LANGUAGE=de
+    SECONDBRAIN_TRANSLATOR=google|deepl|llm|none
+
+🧠 **LLM Usage (if used)**
+
+LLMs in secoundbrain may:
+- summarize text
+- cluster related documents
+- detect similarity
+- support navigation and retrieval
+
+LLMs must not:
+- determine causes
+- assign scores or confidence
+- override human-written content
+- produce system decisions
+
+LLMs here act as librarians, not judges.
+
+🧹 **Refactoring & Maintenance Guidelines**
+
+When modifying secoundbrain:
+- Prefer simpler structures over clever logic
+- Rename anything that sounds like analysis to overview or inspection
+- Keep all processing read-only
+- Separate clearly: external facts, human interpretation
+- Treat all inputs as context, never as truth
+
+🚦 **Acceptance Criteria**
+
+secoundbrain is correctly implemented if:
+- It can be deleted without breaking other systems
+- All inputs are read-only
+- No decisions are made anywhere in the code
+- Translations can be removed without data loss
+- All outputs remain clearly human-authored
+
+🧠 **Mental Model**
+
+errorbrain judges.
+Humans reflect.
+secoundbrain remembers and connects.
+
+🚀 **Next Steps**
+
+- Finalize repository structure
+- Enforce read-only ingest paths
+- Add translator module (pure function)
+- Index and retrieve knowledge safely
+- Integrate downstream only after cleanup
+
+**Final Reminder**
+
+secoundbrain exists to support human memory and understanding, not to automate judgement.
+
+If it ever feels “smart” in a decision-making sense, it is doing too much.
+## Using secoundbrain with errorbrain
+
+secoundbrain is designed to work seamlessly with **errorbrain** as a
+**long-term knowledge and context layer**, not as an analysis or decision system.
+
+The two projects have **strictly separated responsibilities**.
+
+### Roles and Responsibilities
+
+- **errorbrain**
+  - Ingests facts (events, logs, status, metrics)
+  - Correlates evidence
+  - Performs reasoning (rules, optional LLM support)
+  - Produces structured **Verdicts** (machine truth)
+
+- **secoundbrain**
+  - Consumes **human-readable knowledge**
+  - Indexes, links, and retrieves context over time
+  - Supports reflection, learning, and navigation
+  - Never produces system truth or decisions
+
+> secoundbrain does not analyze incidents.  
+> It remembers and connects what humans wrote about them.
+
+---
+
+### Data Flow (One-Way)
+
+Adapters (e.g. fluxbrain)
+↓
+errorbrain
+↓
+Verdict (structured, machine-readable)
+↓
+Markdown / Obsidian notes (human-readable)
+↓
+secoundbrain
+
+- The flow is **read-only**
+- There is **no feedback loop**
+- secoundbrain never influences errorbrain
+
+---
+
+### Typical Workflow
+
+1. **An incident occurs**
+	- Collected by adapters (e.g. FluxCD, CI, runtime signals)
+
+2. **errorbrain produces a Verdict**
+	- What likely happened
+	- Supporting evidence
+	- Recommended actions
+	- Confidence level
+
+3. **Verdict is rendered as Markdown**
+	- Often via an Obsidian vault
+	- Includes human notes, reflections, follow-ups
+
+4. **secoundbrain indexes the knowledge**
+	- Tags, links, timelines
+	- Similar incidents
+	- Recurring patterns
+	- Long-term context
+
+5. **Humans query secoundbrain**
+	- “Have we seen this before?”
+	- “What usually causes this?”
+	- “What did we learn last time?”
+
+---
+
+### What secoundbrain Explicitly Does NOT Do
+
+When used with errorbrain, secoundbrain must not:
+
+- Determine root causes
+- Assign confidence or severity
+- Override or modify verdicts
+- Feed decisions back into operational systems
+- Act as an automated advisor
+
+All system-level truth remains in **errorbrain**.
+
+---
+
+### Why This Separation Matters
+
+This design ensures:
+
+- Clear ownership of decisions
+- Reproducible, auditable verdicts
+- Human knowledge stays human
+- No architectural feedback loops
+- Safe long-term learning without operational risk
+
+> **errorbrain judges.  
+> Humans reflect.  
+> secoundbrain remembers.**
+
+---
+
+### Integration Readiness
+
+secoundbrain is considered correctly integrated with errorbrain if:
+
+- All inputs are read-only (Markdown / exported data)
+- No errorbrain APIs are written to
+- Removing secoundbrain does not affect errorbrain
+- All interpretations remain clearly human-authored
+## Obsidian → secoundbrain Integration
+
+secoundbrain konsumiert ausschließlich human-readable Markdown-Notizen (z. B. aus Obsidian-Vaults), die aus System-Verdicts abgeleitet wurden.
+Es indexiert, verlinkt und stellt Kontext bereit – beeinflusst oder verändert aber niemals die Ursprungssysteme.
+
 # Fabric Second Brain
 
 Automatisierte Second Brain Organisation mit Fabric AI + Obsidian
+
+## LLM Usage & Guardrails
+
+**Jede Nutzung von LLMs in secoundbrain ist strikt limitiert auf:**
+
+- Zusammenfassung (Summarization)
+- Clustering
+- Ähnlichkeitssuche (Similarity Detection)
+- Navigation/Verlinkung
+
+**LLMs dürfen NICHT:**
+
+- Analysieren, bewerten, scoren oder Entscheidungen treffen
+- Systemwahrheiten erzeugen
+- Ursachen bewerten oder Empfehlungen aussprechen
+
+LLMs in secoundbrain sind Bibliothekare, keine Richter. Sie unterstützen nur bei Kontext, Übersicht und Navigation.
 
 ## Quick Start
 
