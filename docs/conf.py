@@ -1,6 +1,6 @@
-# Sphinx configuration for secoundbrain project
+# Sphinx configuration for secondbrain project
 default_role = 'py'
-project = 'secoundbrain'
+project = 'secondbrain'
 author = 'afeldman'
 release = '1.0.0'
 extensions = [
