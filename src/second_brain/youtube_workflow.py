@@ -9,7 +9,6 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 import frontmatter
-import json
 
 
 def get_vault_path():
