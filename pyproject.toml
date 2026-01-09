@@ -1,12 +1,12 @@
 [project]
-name = "second-brain"
+name = "secondbrain"
 version = "0.2.0"
 description = "Automatisierte Second Brain Organisation mit Fabric AI + Obsidian"
 readme = "README.md"
 requires-python = ">=3.11"
-license = {text = "MIT"}
+license = {text = "Apache-2.0"}
 authors = [
-    {name = "Anton Feldmann", email = "anton@feldmann.dev"}
+    {name = "Anton Feldmann", email = "anton.feldmann@gmail.com"}
 ]
 keywords = ["obsidian", "fabric", "second-brain", "pkm", "ai", "automation"]
 classifiers = [
@@ -21,36 +21,36 @@ classifiers = [
 ]
 
 dependencies = [
+    "python-decouple>=3.8",
     "python-frontmatter>=1.0.0",
     "PyYAML>=6.0",
 ]
 
 [project.scripts]
 # Haupt-Organisationstools
-organize = "fabric_second_brain.organize:main"
-init-vault = "fabric_second_brain.init_vault:main"
-cleanup-vault = "fabric_second_brain.cleanup_vault:main"
+organize = "secondbrain.organize:main"
+init-vault = "secondbrain.init_vault:main"
+cleanup-vault = "secondbrain.cleanup_vault:main"
 
 # Daily Notes
-create-dailies = "fabric_second_brain.create_dailies:main"
+create-dailies = "secondbrain.create_dailies:main"
 
 # YouTube Workflow
-youtube = "fabric_second_brain.youtube_workflow:main"
+youtube = "secondbrain.youtube_workflow:main"
 
 # Generators
-moc-builder = "fabric_second_brain.generators.moc_builder:main"
-people-extractor = "fabric_second_brain.generators.people_extractor:main"
-project-extractor = "fabric_second_brain.generators.project_extractor:main"
-cluster-map = "fabric_second_brain.generators.cluster_map:main"
-
+moc-builder = "secondbrain.generators.moc_builder:main"
+people-extractor = "secondbrain.generators.people_extractor:main"
+project-extractor = "secondbrain.generators.project_extractor:main"
+cluster-map = "secondbrain.generators.cluster_map:main"
 # Auto-Tools
-auto-yaml-header = "fabric_second_brain.auto_yaml_header:main"
-auto-tags = "fabric_second_brain.auto_tags:main"
+auto-yaml-header = "secondbrain.auto_yaml_header:main"
+auto-tags = "secondbrain.auto_tags:main"
 
 [project.urls]
-Homepage = "https://github.com/afeldman/fabric-second-brain"
-Repository = "https://github.com/afeldman/fabric-second-brain"
-Issues = "https://github.com/afeldman/fabric-second-brain/issues"
+Homepage = "https://github.com/afeldman/secondbrain"
+Repository = "https://github.com/afeldman/secondbrain"
+Issues = "https://github.com/afeldman/secondbrain/issues"
 
 [build-system]
 requires = ["hatchling"]
@@ -60,7 +60,7 @@ build-backend = "hatchling.build"
 dev = []
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/fabric_second_brain"]
+packages = ["src/secondbrain"]
 
 [tool.ruff]
 line-length = 100

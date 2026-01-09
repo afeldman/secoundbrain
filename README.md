@@ -1,30 +1,31 @@
 ## Project Context
 
-This repository implements secoundbrain, a long-term knowledge, memory, and context system for humans.
+This repository implements secondbrain, a long-term knowledge, memory, and context system for humans.
 
-secoundbrain is not an analysis engine, not a decision system, and not a source of system truth.
+secondbrain is not an analysis engine, not a decision system, and not a source of system truth.
 
 It consumes human-readable content, indexes it, links it, and makes it retrievable over time.
 
-🎯 **Purpose of secoundbrain**
+🎯 **Purpose of secondbrain**
 
-secoundbrain answers questions like:
+secondbrain answers questions like:
 
 - “Have we seen something like this before?”
 - “Where is related knowledge documented?”
 - “What did we learn last time?”
 - “How are topics, incidents, and ideas connected over time?”
 
-secoundbrain does not answer:
+secondbrain does not answer:
 
 - why something objectively happened
 - what the root cause is
 - how severe something is
 - what action must be taken
 
+
 🧭 **Role in the Ecosystem**
 
-secoundbrain is a pure consumer.
+secondbrain is a pure consumer.
 
 Canonical flow:
 
@@ -34,20 +35,21 @@ errorbrain (Verdicts, English, canonical)
 	↓
 Markdown / Obsidian notes
 	↓
-secoundbrain (indexing, linking, retrieval)
+secondbrain (indexing, linking, retrieval)
 
 - Data flow is one-way
 - All inputs are read-only
-- secoundbrain never influences upstream systems
+- secondbrain never influences upstream systems
+
 
 🧱 **Hard Architecture Rules (non-negotiable)**
 
-- secoundbrain produces no system truth
-- secoundbrain performs no analysis or evaluation
-- secoundbrain assigns no confidence, severity, or scores
-- secoundbrain does not modify verdicts
-- secoundbrain has no write-back channels
-- Removing secoundbrain must not affect any other system
+- secondbrain produces no system truth
+- secondbrain performs no analysis or evaluation
+- secondbrain assigns no confidence, severity, or scores
+- secondbrain does not modify verdicts
+- secondbrain has no write-back channels
+- Removing secondbrain must not affect any other system
 - If something looks like analysis, decision, or judgement → it does not belong here.
 
 📥 **Inputs (Allowed)**
@@ -84,11 +86,11 @@ All stored content is contextual and interpretive, not authoritative.
 
 🌍 **Translation & Localization**
 
-secoundbrain may translate human-readable content before storing or indexing it.
+secondbrain may translate human-readable content before storing or indexing it.
 
 Rules:
 - errorbrain output is always English and canonical
-- Translation happens only in secoundbrain
+- Translation happens only in secondbrain
 - Translation is a presentation step, not reasoning
 - Markdown structure must be preserved
 - Code blocks and identifiers must not be changed
@@ -102,7 +104,7 @@ Example configuration:
 
 🧠 **LLM Usage (if used)**
 
-LLMs in secoundbrain may:
+LLMs in secondbrain may:
 - summarize text
 - cluster related documents
 - detect similarity
@@ -118,7 +120,7 @@ LLMs here act as librarians, not judges.
 
 🧹 **Refactoring & Maintenance Guidelines**
 
-When modifying secoundbrain:
+When modifying secondbrain:
 - Prefer simpler structures over clever logic
 - Rename anything that sounds like analysis to overview or inspection
 - Keep all processing read-only
@@ -127,7 +129,7 @@ When modifying secoundbrain:
 
 🚦 **Acceptance Criteria**
 
-secoundbrain is correctly implemented if:
+secondbrain is correctly implemented if:
 - It can be deleted without breaking other systems
 - All inputs are read-only
 - No decisions are made anywhere in the code
@@ -138,7 +140,7 @@ secoundbrain is correctly implemented if:
 
 errorbrain judges.
 Humans reflect.
-secoundbrain remembers and connects.
+secondbrain remembers and connects.
 
 🚀 **Next Steps**
 
@@ -150,12 +152,12 @@ secoundbrain remembers and connects.
 
 **Final Reminder**
 
-secoundbrain exists to support human memory and understanding, not to automate judgement.
+secondbrain exists to support human memory and understanding, not to automate judgement.
 
 If it ever feels “smart” in a decision-making sense, it is doing too much.
-## Using secoundbrain with errorbrain
+## Using secondbrain with errorbrain
 
-secoundbrain is designed to work seamlessly with **errorbrain** as a
+secondbrain is designed to work seamlessly with **errorbrain** as a
 **long-term knowledge and context layer**, not as an analysis or decision system.
 
 The two projects have **strictly separated responsibilities**.
@@ -168,13 +170,13 @@ The two projects have **strictly separated responsibilities**.
   - Performs reasoning (rules, optional LLM support)
   - Produces structured **Verdicts** (machine truth)
 
-- **secoundbrain**
-  - Consumes **human-readable knowledge**
-  - Indexes, links, and retrieves context over time
-  - Supports reflection, learning, and navigation
-  - Never produces system truth or decisions
+	- **secondbrain**
+	- Consumes **human-readable knowledge**
+	- Indexes, links, and retrieves context over time
+	- Supports reflection, learning, and navigation
+	- Never produces system truth or decisions
 
-> secoundbrain does not analyze incidents.  
+> secondbrain does not analyze incidents.  
 > It remembers and connects what humans wrote about them.
 
 ---
@@ -189,11 +191,11 @@ Verdict (structured, machine-readable)
 ↓
 Markdown / Obsidian notes (human-readable)
 ↓
-secoundbrain
+secondbrain
 
 - The flow is **read-only**
 - There is **no feedback loop**
-- secoundbrain never influences errorbrain
+- secondbrain never influences errorbrain
 
 ---
 
@@ -212,22 +214,22 @@ secoundbrain
 	- Often via an Obsidian vault
 	- Includes human notes, reflections, follow-ups
 
-4. **secoundbrain indexes the knowledge**
+4. **secondbrain indexes the knowledge**
 	- Tags, links, timelines
 	- Similar incidents
 	- Recurring patterns
 	- Long-term context
 
-5. **Humans query secoundbrain**
+5. **Humans query secondbrain**
 	- “Have we seen this before?”
 	- “What usually causes this?”
 	- “What did we learn last time?”
 
 ---
 
-### What secoundbrain Explicitly Does NOT Do
+### What secondbrain Explicitly Does NOT Do
 
-When used with errorbrain, secoundbrain must not:
+When used with errorbrain, secondbrain must not:
 
 - Determine root causes
 - Assign confidence or severity
@@ -251,21 +253,21 @@ This design ensures:
 
 > **errorbrain judges.  
 > Humans reflect.  
-> secoundbrain remembers.**
+> secondbrain remembers.**
 
 ---
 
 ### Integration Readiness
 
-secoundbrain is considered correctly integrated with errorbrain if:
+secondbrain is considered correctly integrated with errorbrain if:
 
 - All inputs are read-only (Markdown / exported data)
 - No errorbrain APIs are written to
-- Removing secoundbrain does not affect errorbrain
+- Removing secondbrain does not affect errorbrain
 - All interpretations remain clearly human-authored
-## Obsidian → secoundbrain Integration
+## Obsidian → secondbrain Integration
 
-secoundbrain konsumiert ausschließlich human-readable Markdown-Notizen (z. B. aus Obsidian-Vaults), die aus System-Verdicts abgeleitet wurden.
+secondbrain konsumiert ausschließlich human-readable Markdown-Notizen (z. B. aus Obsidian-Vaults), die aus System-Verdicts abgeleitet wurden.
 Es indexiert, verlinkt und stellt Kontext bereit – beeinflusst oder verändert aber niemals die Ursprungssysteme.
 
 # Fabric Second Brain
@@ -287,7 +289,7 @@ Automatisierte Second Brain Organisation mit Fabric AI + Obsidian
 - Systemwahrheiten erzeugen
 - Ursachen bewerten oder Empfehlungen aussprechen
 
-LLMs in secoundbrain sind Bibliothekare, keine Richter. Sie unterstützen nur bei Kontext, Übersicht und Navigation.
+LLMs in secondbrain sind Bibliothekare, keine Richter. Sie unterstützen nur bei Kontext, Übersicht und Navigation.
 
 ## Quick Start
 
