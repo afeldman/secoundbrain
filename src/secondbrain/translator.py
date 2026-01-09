@@ -1,19 +1,32 @@
+
 """
-Translator for second brain.
+Translator for secondbrain.
 
 Purpose:
-- Translate human-readable Markdown before indexing/storage
-- Preserve Markdown structure exactly
-- Preserve code blocks and identifiers
-- No analysis, no interpretation, no summarization
+- Translate human-readable Markdown
+- Preserve Markdown structure and code blocks
+- Perform no analysis, no summarization, no interpretation
 
-English input (by errorbrain) is canonical.
-Translation is a **presentation transformation only**.
-
-Configuration:
-- SECONDBRAIN_LANGUAGE (e.g. 'de', 'fr', 'original')
-- SECONDBRAIN_TRANSLATOR (e.g. 'none', 'google', 'llm')
+English input (errorbrain output) is canonical.
+Translation is presentation only.
 """
+
+from decouple import config
+
+LANG = config("SECONDBRAIN_LANGUAGE", default="original")
+BACKEND = config("SECONDBRAIN_TRANSLATOR", default="none").lower()
+
+def translate_markdown(text: str) -> str:
+    if LANG == "original" or BACKEND == "none":
+        return text
+
+    # Dummy implementation for demonstration
+    if BACKEND in ("google", "llm"):
+        return f"[Translated to {LANG} by {BACKEND} (demo)]\n" + text
+
+    raise NotImplementedError(
+        f"Translator backend '{BACKEND}' not implemented"
+    )
 
 from decouple import config
 

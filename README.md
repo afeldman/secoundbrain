@@ -1,3 +1,13 @@
+## Integration with errorbrain and Fabric
+
+errorbrain provides canonical English verdicts.
+Fabric patterns may structure text for readability (presentation only).
+Translation localizes content for humans (presentation only).
+secondbrain stores and indexes context only.
+
+All processing is strictly read-only, non-analytical, and non-decisional.
+No feedback or influence on errorbrain.
+Removing secondbrain does not affect errorbrain or upstream systems.
 ## Project Context
 
 This repository implements secondbrain, a long-term knowledge, memory, and context system for humans.

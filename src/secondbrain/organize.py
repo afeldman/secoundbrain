@@ -2,7 +2,7 @@ import os
 import shutil
 import frontmatter
 from datetime import datetime
-from fabric_second_brain.translator import translate_markdown # Added this import
+from secondbrain.translator import translate_markdown # Added this import
 
 def should_process_file(file_path, vault_path):
     """
